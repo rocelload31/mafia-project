@@ -151,7 +151,7 @@ public class GamePlay {
             }
         }
     }
-    static int findDead () { //in day returns the index of the dead person. If no one was ejected returns -1; if joker died returns -2;
+    static int findMaxVote () {
         int maxVote = players[0].numOfVotes;
         int index;
         for (index=1 ; index<players.length ; index++) {
@@ -159,41 +159,44 @@ public class GamePlay {
                 maxVote = players[index].numOfVotes;
             }
         }
+        return maxVote;
+    }
+    static int findDead () { //in day returns the index of the dead person. If no one was ejected returns -1; if joker died returns -2;
+        int maxVote = findMaxVote();
         for (int i=0 ; i<players.length ; i++) {
             if (players[i].numOfVotes==maxVote) {
                 for (int j=i+1 ; j<players.length ; j++) { //checks if more than one person is voted
                     if (players[j].numOfVotes==maxVote) {
-                        if (ifDay) {
-                            return -1;
-                        }
+                        if (ifDay) {return -1;} //day
                         else { //night
-                            if (players[i].ifCured) {
-                                return j;
-                            }
-                            else if (players[j].ifCured) {
-                                return j;
-                            }
-                            else {
-                                return -1; //no body died
-                            }
+                            if (players[i].ifCured) {return j;}
+                            else if (players[j].ifCured) {return i;}
+                            else if (players[i] instanceof Bulletproof && players[i].ifBulletUsed==false) {
+                                players[i].ifBulletUsed = true;
+                                return j; }
+                            else if (players[j] instanceof Bulletproof && players[j].ifBulletUsed==false) {
+                                players[j].ifBulletUsed = true;
+                                return i;}
+                            else { return -1;} //no body died
                         }
                     }
                 } //if the program reaches this line then one person is voted
                 if (ifDay) {
-                    if (players[i] instanceof Joker) {
-                        return -2;
-                    }
-                    return i;
+                    if (players[i] instanceof Joker) { return -2; }
+                    else {return i;}
                 }
                 else
                 { //night
                     if (players[i].ifCured) {
                         players[i].ifTriedToBEKilled = true;
-                        return i; //mafia tried to kill i // i was not killed
+                        return i; //mafia tried to kill i // i was not killed //cured
                     }
-                    else {
-                        return i;
+                    else if (players[i] instanceof Bulletproof && players[i].ifBulletUsed == false) {
+                        players[i].ifBulletUsed = true;
+                        players[i].ifTriedToBEKilled = true;
+                        return i; //mafia tried to kill i // i was not killed //bulletproofed
                     }
+                    else { return i;}
                 }
             }
         }
@@ -230,6 +233,7 @@ public class GamePlay {
                     for (int i=0 ; i<numOfPlayers ; i++) {
                         players[i] = new Player(playerNames[i+1]);
                     }
+                    Mafia.votes = new String[players.length];
                     break;
                 case "assign_role":
                     if (ifCreated==false) {
@@ -260,8 +264,7 @@ public class GamePlay {
                 default:
                     System.out.println("not recognized!!!");
             }
-           // count();
-            Mafia.votes = new String[players.length];
+            //Mafia.votes = new String[players.length];
             while (ifStarted) {
                 ////////////////////////////////////////////////////////////////////////////////////////////////day mode
                 if (ifDay) {
@@ -370,6 +373,11 @@ public class GamePlay {
                             if (players[firstIndex] instanceof Silencer) {
                                 if (silencerCounter == 1 ) {
                                     Mafia.votes[firstIndex] = players[secondIndex].getName();
+                                    silencerCounter--;
+                                }
+                                else {
+                                    Silencer.Silence(players[secondIndex]);
+                                    silencerCounter++;
                                 }
                             }
                             else {
@@ -390,10 +398,6 @@ public class GamePlay {
                                     else {
                                         Detective.ask(players[secondIndex]);
                                     }
-                                    break;
-                                case "Silencer":
-                                    Silencer.Silence(players[secondIndex]);
-                                    silencerCounter++;
                                     break;
                                 default:
                                     System.out.println("user can not wakeup during night");

@@ -6,6 +6,7 @@ public class Player {
     boolean ifCured = false;
     boolean ifTriedToBEKilled = false;
     boolean ifVoted = false;
+    boolean ifBulletUsed = false;
     int numOfVotes = 0;
     //constructor
     public Player (String playerName) {

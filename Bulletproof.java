@@ -1,6 +1,6 @@
-public class Bulletproof extends Player {
+public class Bulletproof extends Villager {
     //properties
-    int numOfBullets = 0;
+
     //constructor
     public Bulletproof(String playerName) {
         super(playerName);
