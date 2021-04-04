@@ -26,7 +26,6 @@ public class GamePlay {
         System.out.println("villagers: " + numOfVillagers);
     }
     static int checkWon () { //returns: 1 if villagers won , 2 if mafia won , 0 if nobody won
-        /**/printStatus();
         if (numOfVillagers<=numOfMafia) {
             return 2;
         }
