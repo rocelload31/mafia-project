@@ -16,10 +16,11 @@ public class GamePlay {
     static int numOfMafia = 0;
     static int numOfVillagers = 0;
     //methods
-    static void ifStatusRecalled (String opp) {
+    static boolean checkStatusWanted (String opp) {
         if (opp.equals("get_game_status")) {
-
+            return true;
         }
+        return false;
     }
     static void printStatus () {
         System.out.println("mafia: " + numOfMafia);
@@ -109,6 +110,10 @@ public class GamePlay {
         int indexOfVotee;
         Scanner sc = new Scanner(System.in);
         voter = sc.next();
+        if (checkStatusWanted(voter)) {
+            printStatus();
+            voter = sc.next();
+        }
         do {
             indexOfVoter = findIndexByName(voter);
             votee = sc.next();
@@ -130,6 +135,10 @@ public class GamePlay {
                 players[indexOfVotee].numOfVotes++;
             }
             voter = sc.next();
+            if (checkStatusWanted(voter)) {
+                printStatus();
+                voter = sc.next();
+            }
         }
         while (voter.equals("end_vote")==false);
     }
@@ -205,6 +214,10 @@ public class GamePlay {
         //operations
         do {
             String opp = scanner.next();
+            if (checkStatusWanted(opp)) {
+                printStatus();
+                opp = scanner.next();
+            }
             switch (opp) {
                 //create a new game
                 case "create_game":
@@ -223,7 +236,7 @@ public class GamePlay {
                         System.out.println("no game created");
                     }
                     else {
-                        assign_role(scanner.next(), scanner.next());
+                        assign_role(scanner.next() , scanner.next());
                     }
                     break;
                 case "start_game":
@@ -340,6 +353,11 @@ public class GamePlay {
                     int secondIndex = 0;
                     int silencerCounter = 0;
                     String firstPlayer = scanner.next();
+                    if (checkStatusWanted(firstPlayer)) {
+                        printStatus();
+                        firstPlayer = scanner.next();
+                    }
+
                     do {
                         firstIndex = findIndexByName(firstPlayer);
                         String secondPlayer = scanner.next();
@@ -383,6 +401,10 @@ public class GamePlay {
                         }
                         ///////////////////
                         firstPlayer = scanner.next();
+                        if (checkStatusWanted(firstPlayer)) {
+                            printStatus();
+                            firstPlayer = scanner.next();
+                        }
                     }
                     while (firstPlayer.equals("end_night")==false);
                     nightVote();
