@@ -16,6 +16,11 @@ public class GamePlay {
     static int numOfMafia = 0;
     static int numOfVillagers = 0;
     //methods
+    static void ifStatusRecalled (String opp) {
+        if (opp.equals("get_game_status")) {
+
+        }
+    }
     static void printStatus () {
         System.out.println("mafia: " + numOfMafia);
         System.out.println("villagers: " + numOfVillagers);
@@ -131,14 +136,8 @@ public class GamePlay {
     }
     static void nightVote () {
         int index = 0;
-        //Mafia.votes[voterIndex] = players[voteeIndex].getName();
         for (int i=0 ; i<Mafia.votes.length ; i++) {
-            /*
-            for (String s : Mafia.votes) {
-                System.out.print(s + " ");
-            }*/
             index = findIndexByName(Mafia.votes[i]);
-          //  System.out.println(index);
             if (index!=-1) {
                 players[index].numOfVotes++;
             }
@@ -201,16 +200,6 @@ public class GamePlay {
         }
         return null;
     }
-    /*static void count () { //counts num of mafias and villagers
-        for (Player p : players) {
-            if (p instanceof Mafia) {
-                numOfMafia++;
-            }
-            else if (p instanceof Villager){
-                numOfVillagers++;
-            }
-        }
-    }*/
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static void main (String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -360,16 +349,14 @@ public class GamePlay {
                             System.out.println("user is dead");
                         }
                         //process of voting in night
-                        else if (players[firstIndex] instanceof Mafia) { /**/
+                        else if (players[firstIndex] instanceof Mafia) {
                             if (players[firstIndex] instanceof Silencer) {
                                 if (silencerCounter == 1 ) {
                                     Mafia.votes[firstIndex] = players[secondIndex].getName();
-                                    ///**/System.out.println("silencer night vote ok");
                                 }
                             }
                             else {
                                 Mafia.votes[firstIndex] = players[secondIndex].getName();
-                                ///**/ System.out.println("night vote ok");
                             }
                         }
                         //god awakes a villager
@@ -377,7 +364,6 @@ public class GamePlay {
                             switch (players[firstIndex].getClass().getSimpleName()) {
                                 case "Doctor":
                                     Doctor.cure(players[secondIndex]);
-                                    ///**/System.out.println("cure vote ok");
                                     break;
                                 case "Detective":
                                     if (detectiveCounter==1) {
@@ -387,12 +373,10 @@ public class GamePlay {
                                     else {
                                         Detective.ask(players[secondIndex]);
                                     }
-                                    ///**/System.out.println("detect vote ok");
                                     break;
                                 case "Silencer":
                                     Silencer.Silence(players[secondIndex]);
                                     silencerCounter++;
-                                    ///**/System.out.println("silence vote ok");
                                     break;
                                 default:
                                     System.out.println("user can not wakeup during night");
